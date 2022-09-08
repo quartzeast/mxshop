@@ -1,0 +1,7 @@
+host: '39.98.125.151'
+port: 8848
+namespace: '9ba75beb-6670-4cea-87aa-aa4d5d8b61ce'
+user: 'nacos'
+password: 'nacos'
+dataid: 'user-srv.json'
+group: 'pro'

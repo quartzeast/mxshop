@@ -2,39 +2,56 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 option go_package = "./;proto";
 
-message User {
+service User {
+  rpc GetUserList(PageInfo) returns (UserListResponse); //用户列表
+  rpc GetUserByMobile(MobileRequest)
+      returns (UserInfoResponse); //通过电话查询用户
+  rpc GetUserById(IdRequest) returns (UserInfoResponse); //通过id查询用户
+  rpc CreateUser(CreateUserInfo) returns (UserInfoResponse);      //添加用户
+  rpc UpdateUser(UpdateUserInfo) returns (google.protobuf.Empty); //更新用户
+  rpc CheckPassWord(PasswordCheckInfo) returns (CheckResponse);   //检查密码
+}
+
+message PasswordCheckInfo {
+  string passWord = 1;
+  string encryptedPassword = 2;
+}
+
+message MobileRequest { string mobile = 1; }
+
+message IdRequest { int32 id = 1; }
+
+message PageInfo {
+  uint32 pn = 1;
+  uint32 pSize = 2;
+}
+
+message CreateUserInfo {
+  string nickName = 1;
+  string passWord = 2;
+  string mobile = 3;
+}
+
+message UpdateUserInfo {
+  string id = 1;
+  string nickName = 2;
+  string gender = 3;
+  uint64 birthday = 4;
+}
+
+message UserInfoResponse {
   int32 id = 1;
-  string password = 2;
-  string phone = 3;
-  string name = 4;
+  string passWord = 2;
+  string mobile = 3;
+  string nickName = 4;
   uint64 birthday = 5;
   string gender = 6;
   int32 role = 7;
 }
 
-service UserService {
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
-  rpc GetUser(GetUserRequest) returns (User);
-  rpc CreateUser(CreateUserRequest) returns (User);
-}
+message CheckResponse { bool success = 1; }
 
-message ListUsersRequest {
-  uint32 pn = 1;
-  uint32 pSize = 2;
-}
-
-message ListUsersResponse {
+message UserListResponse {
   int32 total = 1;
-  repeated User users = 2;
-}
-
-message GetUserRequest {
-  string phone = 1;
-  string id = 2;
-}
-
-message CreateUserRequest {
-  string phone = 1;
-  string password = 2;
-  string name = 3;
+  repeated UserInfoResponse data = 2;
 }
